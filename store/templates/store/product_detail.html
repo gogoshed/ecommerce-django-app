@@ -1,0 +1,17 @@
+{% extends 'store/base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ product.name }}</h2>
+<img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-3">
+<p>{{ product.description }}</p>
+<p>Price: ${{ product.price }}</p>
+
+<form method="post" action="{% url 'add-to-cart' %}">
+    {% csrf_token %}
+    <input type="hidden" name="product_id" value="{{ product.id }}">
+    <input type="number" name="quantity" value="1" min="1" class="form-control mb-2" style="width: 100px;">
+    <button class="btn btn-success">Add to Cart</button>
+</form>
+{% endblock %}
