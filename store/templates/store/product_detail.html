@@ -1,17 +1,39 @@
 {% extends 'store/base.html' %}
+{% load static %}
 
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
-<h2>{{ product.name }}</h2>
-<img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-3">
-<p>{{ product.description }}</p>
-<p>Price: ${{ product.price }}</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            {% if product.image %}
+                {# 1. Try to show the image uploaded in Admin #}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm">
+            {% else %}
+                {# 2. Fallback to your local static image if no image is in DB #}
+                <img src="{% static 'store/images/2lapdop.jpg' %}" alt="Placeholder" class="img-fluid rounded shadow-sm">
+            {% endif %}
+        </div>
 
-<form method="post" action="{% url 'add-to-cart' %}">
-    {% csrf_token %}
-    <input type="hidden" name="product_id" value="{{ product.id }}">
-    <input type="number" name="quantity" value="1" min="1" class="form-control mb-2" style="width: 100px;">
-    <button class="btn btn-success">Add to Cart</button>
-</form>
+        <div class="col-md-6">
+            <nav aria-label="breadcrumb">
+                <p class="text-muted mb-1">Store / {{ product.category|default:"General" }}</p>
+            </nav>
+            <h1 class="fw-bold">{{ product.name }}</h1>
+            <p class="text-secondary">{{ product.description }}</p>
+            <h3 class="text-dark my-4">Price: ${{ product.price }}</h3>
+
+            <form method="post" action="{% url 'api_add_to_cart' %}">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity:</label>
+                    <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control" style="width: 100px;">
+                </div>
+                <button type="submit" class="btn btn-success btn-lg px-5">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

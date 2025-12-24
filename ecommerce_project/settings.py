@@ -140,7 +140,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+
+# --- STATIC FILES (CSS, JavaScript, Images for UI) ---
 STATIC_URL = 'static/'
+
+# This tells Django to look for the 'static' folder you created in the root
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# Where Django will gather all static files for production
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 MEDIA_URL = '/media/'
@@ -151,3 +161,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
+
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

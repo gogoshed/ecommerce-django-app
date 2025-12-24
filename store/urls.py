@@ -1,66 +1,40 @@
 from django.urls import path
-from .views import (
-    home_view,
-    product_list_view,
-    product_detail_view,
-    cart_view,
-    checkout_view,
-    login_view,
-    logout_view,
-    register_view,
-    ProductList,
-    ProductDetail,
-    CategoryList,
-    ProductsByCategory,
-    CartView,
-    AddToCart,
-    UpdateCartItem,
-    RemoveCartItem,
-    Checkout,
-    AdminProductCreate,
-    AdminProductUpdateDelete,
-    AdminOrderList,
-    AdminOrderUpdate,
-)
-
-from store.views import home
-
+from . import views
 
 urlpatterns = [
-    # -------------------------
-    # TEMPLATE VIEWS
-    # -------------------------
-    path('', home_view, name='home'),
-    path('products/', product_list_view, name='product-list-template'),
-    path('products/<int:pk>/', product_detail_view, name='product-detail-template'),
-    path('cart/', cart_view, name='cart-template'),
-    path('checkout/', checkout_view, name='checkout-template'),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
-    path('register/', register_view, name='register'),
+    # --- Home Page ---
+    path('', views.home_view, name='home'),
 
-    # -------------------------
-    # API ENDPOINTS
-    # -------------------------
-    path('api/products/', ProductList.as_view(), name='product-list'),
-    path('api/products/<int:pk>/', ProductDetail.as_view(), name='product-detail'),
-    path('api/categories/', CategoryList.as_view(), name='category-list'),
-    path('api/categories/<int:id>/products/', ProductsByCategory.as_view(), name='products-by-category'),
-    path('api/cart/', CartView.as_view(), name='cart'),
-    path('api/cart/add/', AddToCart.as_view(), name='add-to-cart'),
-    path('api/cart/<int:cart_item_id>/update/', UpdateCartItem.as_view(), name='update-cart-item'),
-    path('api/cart/<int:cart_item_id>/delete/', RemoveCartItem.as_view(), name='remove-cart-item'),
-    path('api/checkout/', Checkout.as_view(), name='checkout-api'),
+    # --- Product List (Dual named to prevent NoReverseMatch) ---
+    path('products/', views.product_list_view, name='product-list'),
+    path('products/list/', views.product_list_view, name='product-list-template'),
 
-    # -------------------------
-    # ADMIN API ENDPOINTS
-    # -------------------------
-    path('api/admin/products/', AdminProductCreate.as_view(), name='admin-product-create'),
-    path('api/admin/products/<int:pk>/', AdminProductUpdateDelete.as_view(), name='admin-product-update-delete'),
-    path('api/admin/orders/', AdminOrderList.as_view(), name='admin-order-list'),
-    path('api/admin/orders/<int:pk>/', AdminOrderUpdate.as_view(), name='admin-order-update'),
+    # --- Product Detail ---
+    path('products/<int:pk>/', views.product_detail_view, name='product-detail'),
+    path('products/detail/<int:pk>/', views.product_detail_view, name='product-detail-template'),
 
-    path('', home, name='home'),
+    # --- Categories (The one causing your current error) ---
+    path('category/<int:category_id>/', views.products_by_category_view, name='products-by-category'),
+    path('category/view/<int:category_id>/', views.products_by_category_view, name='products-by-category-template'),
+
+    # --- Cart ---
+    path('cart/', views.cart_view, name='cart'),
+    path('cart/view/', views.cart_view, name='cart-template'),
+
+    # --- Checkout ---
+    path('checkout/', views.checkout_view, name='checkout'),
+    path('checkout/pay/', views.checkout_view, name='checkout-template'),
+
+    # --- Auth ---
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('register/', views.register_view, name='register'),
+
+    # --- API Endpoints ---
+    path('api/products/', views.ProductList.as_view(), name='api_products'),
+    path('api/cart/', views.CartView.as_view(), name='api_cart'),
+    path('api/add-to-cart/', views.AddToCart.as_view(), name='api_add_to_cart'),
+
+    # --- Utility ---
+    path('populate/', views.populate_db_view, name='populate'),
 ]
-
-

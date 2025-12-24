@@ -1,0 +1,40 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Category Products{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">{{ category.name }}</h2>
+
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+
+            {% if forloop.counter == 1 %}
+                <img src="{% static 'store/images/3shirt.jpg' %}" class="card-img-top">
+            {% elif forloop.counter == 2 %}
+                <img src="{% static 'store/images/4book.jpg' %}" class="card-img-top">
+            {% elif forloop.counter == 3 %}
+                <img src="{% static 'store/images/1phone.jpg' %}" class="card-img-top">
+            {% elif forloop.counter == 4 %}
+                <img src="{% static 'store/images/2lapdop.jpg' %}" class="card-img-top">
+            {% else %}
+                <img src="{% static 'store/images/default.jpg' %}" class="card-img-top">
+            {% endif %}
+
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">₦{{ product.price }}</p>
+                <a href="{% url 'product-detail' product.id %}" class="btn btn-outline-primary">
+                    View Product
+                </a>
+            </div>
+
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No products in this category.</p>
+    {% endfor %}
+</div>
+{% endblock %}
